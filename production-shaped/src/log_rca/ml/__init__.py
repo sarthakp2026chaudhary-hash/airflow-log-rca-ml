@@ -5,6 +5,7 @@
   templates (Phase 1 RCA report).
 - ``anomaly``:        IsolationForest per-run anomaly detection (Phase 2).
 - ``classification``: RandomForest failure-mode classifier (Phase 3).
+- ``llm_rca``:        Claude-API-based RCA summariser (Phase 4).
 """
 
 from log_rca.ml.anomaly import AnomalyDetector, AnomalyScore
@@ -14,6 +15,14 @@ from log_rca.ml.discrimination import (
     GENERIC_FAILURE_PATTERNS,
     Discriminator,
     is_generic_template,
+)
+from log_rca.ml.llm_rca import (
+    ClaudeBackend,
+    LLMRcaSummarizer,
+    RcaRequest,
+    RcaResult,
+    StubBackend,
+    auto_backend,
 )
 
 __all__ = [
@@ -25,4 +34,10 @@ __all__ = [
     "AnomalyDetector",
     "AnomalyScore",
     "FailureClassifier",
+    "LLMRcaSummarizer",
+    "RcaRequest",
+    "RcaResult",
+    "StubBackend",
+    "ClaudeBackend",
+    "auto_backend",
 ]

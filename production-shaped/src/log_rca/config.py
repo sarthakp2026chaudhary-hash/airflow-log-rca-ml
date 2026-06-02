@@ -39,7 +39,7 @@ class DatagenSettings(BaseModel):
 
 
 class LLMSettings(BaseModel):
-    model: str = "claude-sonnet-4-6"
+    model: str = "claude-sonnet-4-0"
     max_output_tokens: int = 1024
 
 

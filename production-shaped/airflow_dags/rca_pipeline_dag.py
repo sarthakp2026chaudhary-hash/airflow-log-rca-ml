@@ -66,10 +66,31 @@ def _run_phase3() -> None:
               "failure-mode templates may be overlapping.")
 
 
+def _run_phase4() -> None:
+    """Run Phase 4 (LLM RCA summaries).
+
+    Defaults to 'auto' backend: ClaudeBackend if ANTHROPIC_API_KEY is set,
+    else StubBackend. Samples 10 failed runs by default.
+    """
+    from log_rca.config import load_settings
+    from log_rca.pipeline.phase4 import run
+
+    settings = load_settings()
+    bucket = settings.storage.bucket_root
+    report = Path("reports") / "phase4_llm_rca.md"
+    cache = Path("reports") / "phase4_cache.json"
+    stats = run(
+        bucket_root=bucket, report_path=report,
+        backend_name="auto", model=settings.llm.model,
+        n=10, cache_path=cache,
+    )
+    print(f"Phase 4 backend={stats['backend']} cache_hits={stats['cache_hits']}")
+
+
 if DAG is not None:
     with DAG(
         dag_id="rca_pipeline",
-        description="Daily RCA pipeline (Phases 1-3 today; phase 4 to come)",
+        description="Daily RCA pipeline (all 4 phases)",
         start_date=datetime(2026, 1, 1),
         schedule="@daily",
         catchup=False,
@@ -79,7 +100,7 @@ if DAG is not None:
             "retries": 1,
             "retry_delay": timedelta(minutes=5),
         },
-        tags=["rca", "phase-1", "phase-2", "phase-3", "synthetic"],
+        tags=["rca", "phase-1", "phase-2", "phase-3", "phase-4", "synthetic"],
     ) as dag:
         phase1 = PythonOperator(
             task_id="phase1_template_clustering",
@@ -93,7 +114,8 @@ if DAG is not None:
             task_id="phase3_classify_failures",
             python_callable=_run_phase3,
         )
-        phase1 >> phase2 >> phase3
-        # Future:
-        #   phase4 = PythonOperator(task_id="phase4_llm_rca_summaries", ...)
-        #   phase3 >> phase4
+        phase4 = PythonOperator(
+            task_id="phase4_llm_rca_summaries",
+            python_callable=_run_phase4,
+        )
+        phase1 >> phase2 >> phase3 >> phase4

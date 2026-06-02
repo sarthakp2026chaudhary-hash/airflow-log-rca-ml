@@ -45,7 +45,15 @@ Use the mini-project to *understand* a phase; use the production-shaped side to 
 | 3 | Classify failure mode (RandomForest, supervised) | `phase3_classify.py` | `src/log_rca/ml/classification.py` |
 | 4 | LLM summarises root cause + suggested fix (Claude API) | `phase4_llm_rca.py` | `src/log_rca/ml/llm_rca.py` |
 
-Current status: **Phases 0 + 1 + 2 + 3 shipped.** Phase 1 runs across all 3 datasets; Phase 2 (IsolationForest anomaly detection) hits **precision@25 = 76%** on the synthetic dataset; Phase 3 (RandomForest 8-class failure-mode classifier) hits **100% accuracy** on out-of-fold CV (synthetic templates are very distinctive — real data would be harder). Phase 4 (LLM RCA summaries) lands in the next commit.
+Current status: **All four phases (0 + 1 + 2 + 3 + 4) shipped end-to-end.**
+
+- Phase 0: synthetic Airflow log generator (1,835 files, 8 failure modes labelled)
+- Phase 1: Drain3 template mining + Fisher's-exact discriminators (correctly surfaces all 8 failure-mode templates; also runs on LogHub Hadoop + HDFS)
+- Phase 2: IsolationForest anomaly detection — **precision@25 = 76%** vs ground truth
+- Phase 3: RandomForest 8-class failure-mode classifier — **100% accuracy** on out-of-fold CV (synthetic data has very distinctive templates; expect 80–90% on real bank logs)
+- Phase 4: Claude-API LLM RCA summaries (`claude-sonnet-4-0`) with prompt caching + on-disk response cache. Stub mode for offline / no-API-key runs.
+
+The Airflow DAG `rca_pipeline` now chains all four phases: `phase1 >> phase2 >> phase3 >> phase4`.
 
 ---
 

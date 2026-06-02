@@ -17,6 +17,7 @@ datagen:
   failure_rate: 0.30
 
 llm:
-  model: claude-sonnet-4-6
+  model: claude-sonnet-4-0
   max_output_tokens: 1024
   # API key is read from ANTHROPIC_API_KEY env var; never put it here.
+  # Set LOG_RCA_LLM__MODEL=claude-opus-4-1 for deeper RCA reasoning at higher cost.

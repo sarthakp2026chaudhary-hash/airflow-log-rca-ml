@@ -60,6 +60,7 @@ log-rca-phase1 = "log_rca.pipeline.phase1:main"
 log-rca-phase1-hadoop = "log_rca.pipeline.phase1_loghub:main"
 log-rca-phase2 = "log_rca.pipeline.phase2:main"
 log-rca-phase3 = "log_rca.pipeline.phase3:main"
+log-rca-phase4 = "log_rca.pipeline.phase4:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
