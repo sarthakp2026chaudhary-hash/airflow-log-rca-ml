@@ -18,12 +18,20 @@ This repo replicates that **shape** end-to-end on your laptop. No GCP credential
 
 ```
 airflow-log-rca-ml/
-├── fake_gcs_bucket/        # shared synthetic logs (gitignored, regenerable)
+├── data/                   # 3 datasets, each with its own loader (see data/README.md)
+│   ├── 1_synthetic_airflow/   # regenerable; lives in fake_gcs_bucket/ at runtime
+│   ├── 2_loghub_hadoop/       # real Hadoop MapReduce logs (LogHub 2k sample)
+│   └── 3_loghub_hdfs/         # real HDFS block-level logs (LogHub 2k sample)
+├── fake_gcs_bucket/        # synthetic Airflow logs (gitignored; regenerable)
 ├── mini-project/           # learning-grade: one script per phase, heavy comments
+│   └── datasets/           # 3 per-dataset loaders (1_synthetic.py, 2_*, 3_*)
 └── production-shaped/      # engineered: package + Airflow DAGs + Docker + tests
+    └── src/log_rca/datasets/   # 2 per-dataset loaders (synthetic + hadoop)
 ```
 
-Both folders read from the **same** `fake_gcs_bucket/`, so their outputs are directly comparable. Use the mini-project to *understand* a phase; use the production-shaped side to see *what the same idea looks like* when split into modules with config, tests, and orchestration.
+Use the mini-project to *understand* a phase; use the production-shaped side to see *what the same idea looks like* when split into modules with config, tests, and orchestration.
+
+**Datasets are deliberately not unified into a common schema.** Each source has different columns (Airflow has `dag_id`/`task_id`; Hadoop has `Process`/`Component`; HDFS has `Pid`/`Component`), and we run the same RCA pipeline against one dataset at a time so we can compare results side by side. See `data/README.md` for sources, columns, licences, and citations.
 
 ---
 
