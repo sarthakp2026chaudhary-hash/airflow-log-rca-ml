@@ -1,0 +1,16 @@
+# Phase 0 — only needs Faker for realistic timestamps/IDs in log messages
+faker>=25,<32
+
+# Phase 1 deps (installed early so a single `pip install -r` is enough later)
+drain3>=0.9.11,<1.0
+pandas>=2.2,<3
+scipy>=1.13,<2
+rich>=13,<14
+
+# Phase 2/3
+scikit-learn>=1.5,<2
+joblib>=1.4,<2
+
+# Phase 4
+anthropic>=0.40,<1
+python-dotenv>=1.0,<2

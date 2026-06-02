@@ -1,0 +1,22 @@
+# Default configuration. Override any value via environment variables prefixed
+# with LOG_RCA_, e.g. LOG_RCA_DATAGEN__TOTAL_RUNS=2000 (note the double underscore
+# for nested fields). See src/log_rca/config.py.
+
+storage:
+  # "local" backend means "treat a local directory as if it were a GCS bucket".
+  # Later we can add "gcs" with the same interface.
+  backend: local
+  bucket_root: ../fake_gcs_bucket
+  logs_prefix: airflow-logs
+  truth_file: _truth.jsonl
+
+datagen:
+  seed: 42
+  days_back: 14
+  total_runs: 500
+  failure_rate: 0.30
+
+llm:
+  model: claude-sonnet-4-6
+  max_output_tokens: 1024
+  # API key is read from ANTHROPIC_API_KEY env var; never put it here.

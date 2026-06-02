@@ -1,0 +1,23 @@
+# Placeholder compose file. In later commits this will add:
+#   - postgres (Airflow metastore)
+#   - airflow-webserver
+#   - airflow-scheduler
+# For Phase 0, only the datagen service is real.
+
+services:
+  datagen:
+    build: .
+    image: log-rca:dev
+    volumes:
+      - ../fake_gcs_bucket:/data
+    environment:
+      LOG_RCA_STORAGE__BUCKET_ROOT: /data
+    command: log-rca-gen
+
+  # ---- placeholders for Phase 1+ ----
+  # postgres:
+  #   image: postgres:16-alpine
+  #   ...
+  # airflow-webserver:
+  #   image: apache/airflow:2.10.0
+  #   ...

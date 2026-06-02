@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+build/
+dist/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+.env.local
+*.pem
+*.key
+
+# Generated data (do not commit synthetic logs; they're large and re-creatable)
+fake_gcs_bucket/
+
+# ML artifacts
+*.pkl
+*.joblib
+*.bin
+mini-project/reports/
+production-shaped/reports/
+production-shaped/src/log_rca.egg-info/
+
+# Airflow local state (production-shaped/docker-compose)
+production-shaped/airflow_home/
+production-shaped/logs/
+production-shaped/plugins/
