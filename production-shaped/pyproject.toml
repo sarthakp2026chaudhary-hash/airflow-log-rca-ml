@@ -56,6 +56,7 @@ all = [
 
 [project.scripts]
 log-rca-gen = "log_rca.datagen.cli:main"
+log-rca-phase1 = "log_rca.pipeline.phase1:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

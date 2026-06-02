@@ -45,7 +45,7 @@ Use the mini-project to *understand* a phase; use the production-shaped side to 
 | 3 | Classify failure mode (RandomForest, supervised) | `phase3_classify.py` | `src/log_rca/ml/classification.py` |
 | 4 | LLM summarises root cause + suggested fix (Claude API) | `phase4_llm_rca.py` | `src/log_rca/ml/llm_rca.py` |
 
-Current status: **Phase 0 shipped.** Phases 1–4 land in later commits.
+Current status: **Phases 0 + 1 shipped on the synthetic dataset.** Phase 1 for the LogHub datasets, and Phases 2–4, land in later commits.
 
 ---
 
