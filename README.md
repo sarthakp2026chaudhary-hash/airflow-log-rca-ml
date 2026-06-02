@@ -45,7 +45,7 @@ Use the mini-project to *understand* a phase; use the production-shaped side to 
 | 3 | Classify failure mode (RandomForest, supervised) | `phase3_classify.py` | `src/log_rca/ml/classification.py` |
 | 4 | LLM summarises root cause + suggested fix (Claude API) | `phase4_llm_rca.py` | `src/log_rca/ml/llm_rca.py` |
 
-Current status: **Phases 0 + 1 + 2 shipped.** Phase 1 runs across all 3 datasets; Phase 2 (IsolationForest anomaly detection) runs on the synthetic dataset and hits **precision@25 = 76%** against ground-truth failure labels. Phases 3–4 land in later commits.
+Current status: **Phases 0 + 1 + 2 + 3 shipped.** Phase 1 runs across all 3 datasets; Phase 2 (IsolationForest anomaly detection) hits **precision@25 = 76%** on the synthetic dataset; Phase 3 (RandomForest 8-class failure-mode classifier) hits **100% accuracy** on out-of-fold CV (synthetic templates are very distinctive — real data would be harder). Phase 4 (LLM RCA summaries) lands in the next commit.
 
 ---
 
