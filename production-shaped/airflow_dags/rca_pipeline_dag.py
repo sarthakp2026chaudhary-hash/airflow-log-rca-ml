@@ -31,14 +31,28 @@ def _run_phase1() -> None:
     report = Path("reports") / "phase1_clusters.md"
     stats = run(bucket_root=bucket, report_path=report)
     if stats["failed_runs"] == 0:
-        # not strictly an error, but worth flagging in airflow logs
         print("WARNING: no FAILED runs found — Phase 1 RCA is degenerate.")
+
+
+def _run_phase2() -> None:
+    """Run Phase 2 (anomaly detection) against the synthetic dataset."""
+    from log_rca.config import load_settings
+    from log_rca.pipeline.phase2 import run
+
+    settings = load_settings()
+    bucket = settings.storage.bucket_root
+    report = Path("reports") / "phase2_anomalies.md"
+    stats = run(bucket_root=bucket, report_path=report, top_k=25)
+    if stats["precision_at_k"] < 0.3:
+        # Low precision means the anomaly model isn't useful — surface it.
+        print(f"WARNING: Phase 2 precision@25 is {stats['precision_at_k']:.0%}; "
+              "model may need retuning.")
 
 
 if DAG is not None:
     with DAG(
         dag_id="rca_pipeline",
-        description="Daily RCA pipeline (Phase 1 today; Phases 2-4 to come)",
+        description="Daily RCA pipeline (Phases 1-2 today; 3-4 to come)",
         start_date=datetime(2026, 1, 1),
         schedule="@daily",
         catchup=False,
@@ -48,14 +62,18 @@ if DAG is not None:
             "retries": 1,
             "retry_delay": timedelta(minutes=5),
         },
-        tags=["rca", "phase-1", "synthetic"],
+        tags=["rca", "phase-1", "phase-2", "synthetic"],
     ) as dag:
         phase1 = PythonOperator(
             task_id="phase1_template_clustering",
             python_callable=_run_phase1,
         )
+        phase2 = PythonOperator(
+            task_id="phase2_anomaly_detection",
+            python_callable=_run_phase2,
+        )
+        phase1 >> phase2
         # Future:
-        #   phase2 = PythonOperator(task_id="phase2_anomaly_detection", ...)
         #   phase3 = PythonOperator(task_id="phase3_classify_failures", ...)
         #   phase4 = PythonOperator(task_id="phase4_llm_rca_summaries", ...)
-        #   phase1 >> phase2 >> phase3 >> phase4
+        #   phase2 >> phase3 >> phase4
